@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-class User(Base):
+class User(db.Models):
     __tablename__ = 'user'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
@@ -11,7 +11,7 @@ class User(Base):
     mail = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
 
-class Personajes(Base):
+class Personajes(db.Models):
     __tablename__ = 'personajes'
 
     id = Column(Integer, primary_key=True)
@@ -21,7 +21,7 @@ class Personajes(Base):
     eye_color = Column(String(250), nullable=False)
     url = Column(String(250), nullable=False)
 
-class Planetas(Base):
+class Planetas(db.Models):
     __tablename__ = 'planetas'
 
     id = Column(Integer, primary_key=True)
@@ -32,7 +32,7 @@ class Planetas(Base):
     url = Column(String(250), nullable=False)
 
 
-class Favoritos(Base):
+class Favoritos(db.Models):
     __tablename__ = 'favoritos'
 
     id = Column(Integer, primary_key=True)
