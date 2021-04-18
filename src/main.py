@@ -76,11 +76,11 @@ def login():
     user = User.query.filter_by(mail=mail, password=password).first()
     # valida si estan vacios los ingresos
     if user is None:
-        return jsonify({"msg": "Bad mail or password"}), 401
+       return jsonify({"msg": "Bad mail or password"}), 401
     
-        # crear token
-        access_token = create_access_token(identity=mail)
-        return jsonify({"token": access_token})
+    # crear token login
+    access_token = create_access_token(identity=mail)
+    return jsonify({"token": access_token})
 
 @app.route('/personajes', methods=['POST']) 
 def register_personajes():
