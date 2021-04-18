@@ -12,7 +12,8 @@ from models import db, User, Planetas, Personajes, Favoritos
 #from models import Person
 
 #import JWT for tokenization
-from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -24,7 +25,7 @@ CORS(app)
 setup_admin(app)
 
 # config for jwt
-app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
+app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 # Handle/serialize errors like a JSON object
@@ -53,8 +54,8 @@ def register_user():
     
     # busca usuario en BBDD
     user = User.query.filter_by(mail=mail).first()
+     # the user was not found on the database
     if user:
-        # the user was not found on the database
         return jsonify({"msg": "User already exists"}), 401
     else:
         # crea usuario nuevo
@@ -66,36 +67,55 @@ def register_user():
 
 @app.route('/login', methods=['POST']) 
 def login():
-    user = request.json.get("user", None)
+    mail = request.json.get("mail", None)
     password = request.json.get("password", None)
 
+    print(mail)
+    print(password)
+
+    user = User.query.filter_by(mail=mail, password=password).first()
     # valida si estan vacios los ingresos
     if user is None:
-        return jsonify({"msg": "No user was provided"}), 400
-    if password is None:
-        return jsonify({"msg": "No password was provided"}), 400
-
-    # para proteger contraseñas usen hashed_password
-    # busca usuario en BBDD
-    user = User.query.filter_by(user=user, password=password).first()
-    if user is None:
-        return jsonify({"msg": "Invalid username or password"}), 401
-    else:
+        return jsonify({"msg": "Bad mail or password"}), 401
+    
         # crear token
-        my_token = create_access_token(identity=user.id)
-        return jsonify({"token": my_token})
+        access_token = create_access_token(identity=mail)
+        return jsonify({"token": access_token})
 
-@app.route('/personajes', methods=['GET']) 
-def personajes():
+@app.route('/personajes', methods=['POST']) 
+def register_personajes():
     name = request.json.get("name", None)
     gender = request.json.get("gender", None)
     hair_color = request.json.get("hair_color", None)
     eye_color = request.json.get("eye_color", None)
 
-    personajes = Personajes.query.filter_by(name=name, gender=gender,hair_color=hair_color,eye_color=eye_color).first()
+    # valida si estan vacios los ingresos
+    if name is None:
+        return jsonify({"msg": "No Name was provided"}), 400
+    if gender is None:
+        return jsonify({"msg": "No gender was provided"}), 400
+    if hair_color is None:
+        return jsonify({"msg": "No hair_color was provided"}), 400
+    if eye_color is None:
+        return jsonify({"msg": "No eye_color was provided"}), 400
 
-@app.route('/planetas', methods=['GET']) 
-def planetas():
+    # busca usuario en BBDD
+    personajes = Personajes.query.filter_by(name=name, gender=gender, hair_color=hair_color, eye_color=eye_color).first()
+    if personajes:
+        return jsonify({"msg": "Personajes already exists"}), 401
+    # the user was not found on the database
+    else:
+        # crea personajes nuevo
+        # crea registro nuevo en BBDD de 
+        personajes1 = Personajes(name=name, gender=gender, hair_color=hair_color, eye_color=eye_color)
+        db.session.add(personajes1)
+        db.session.commit()
+        return jsonify({"msg": "Personajes created successfully"}), 200
+
+
+
+@app.route('/planetas', methods=['POST']) 
+def regiter_planetas():
     name = request.json.get("name", None)
     diameter = request.json.get("diameter", None)
     population = request.json.get("population", None)
@@ -110,18 +130,20 @@ def planetas():
     if terrain is None:
         return jsonify({"msg": "No terrain was provided"}), 400
 
-    planetas = Planetas.query.filter_by(name=name, diameter=diameter,population=population,terrain=terrain).first()
+    # busca usuario en BBDD
+    planetas = Planetas.query.filter_by(name=name, diameter=diameter, population=population, terrain=terrain).first()
     
+    # the user was not found on the database
     if planetas:
-        # the user was not found on the database
         return jsonify({"msg": "planetas already exists"}), 401
     else:
-        # crea usuario nuevo
+        # crea planeta nuevo
         # crea registro nuevo en BBDD de
-        planetas = User(name=name, mail=mail, password=password)
-        db.session.add(user1)
+        planetas1 = Planetas(name=name, diameter=diameter, population=population, terrain=terrain)
+        db.session.add(planetas1)
         db.session.commit()
         return jsonify({"msg": "planetas created successfully"}), 200
+
 
 @app.route('/favoritos', methods=['GET']) 
 def favoritos():

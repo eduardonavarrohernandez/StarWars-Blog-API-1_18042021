@@ -73,4 +73,3 @@ class Favoritos(db.Model):
             "favoritoId": self.favoritoId,
             # do not serialize the password, its a security breach
         }
-
