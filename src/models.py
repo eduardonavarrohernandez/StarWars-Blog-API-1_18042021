@@ -12,7 +12,7 @@ class User(db.Model):
     password = db.Column(db.String(250), nullable=False)
     
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<User %r>' % self.username
 
     def serialize(self):
         return {
@@ -29,7 +29,6 @@ class Personajes(db.Model):
     gender = db.Column(db.String(250), nullable=False)
     hair_color = db.Column(db.String(250), nullable=False)
     eye_color = db.Column(db.String(250), nullable=False)
-    url = db.Column(db.String(250), nullable=False)
     def serialize(self):
         return {
             "id": self.id,
@@ -37,7 +36,6 @@ class Personajes(db.Model):
             "gender": self.gender,
             "hair_color": self.hair_color,
             "eye_color": self.eye_color,
-            "url": self.url,
             # do not serialize the password, its a security breach
         }
 
@@ -49,7 +47,6 @@ class Planetas(db.Model):
     diameter = db.Column(db.Integer, nullable=False)
     population = db.Column(db.Integer, nullable=False)
     terrain = db.Column(db.String(250), nullable=False)
-    url = db.Column(db.String(250), nullable=False)
     def serialize(self):
         return {
             "id": self.id,
@@ -57,7 +54,6 @@ class Planetas(db.Model):
             "diameter": self.diameter,
             "population": self.population,
             "terrain": self.terrain,
-            "url": self.url,
             # do not serialize the password, its a security breach
         }
 
