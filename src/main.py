@@ -156,7 +156,7 @@ def favoritos():
 
 #*********************inician los Get
 
-
+'''
 @app.route('/planetas/<int:planetas_id>', methods=['PUT', 'GET'])
 def get_single_planetas(planetas_id):
     """
@@ -173,10 +173,16 @@ def get_single_planetas(planetas_id):
         return jsonify(planetas_id.serialize()), 200
 
     return "Invalid Method", 404
+'''
 
 
 
-
+@app.route('/planetas', methods = ['GET'])
+def planetas():
+   if request.method == 'GET':
+      return jsonify({"msg": "exists"})
+   else:
+      return jsonify({"msg": "not exists"})
 
 
 
