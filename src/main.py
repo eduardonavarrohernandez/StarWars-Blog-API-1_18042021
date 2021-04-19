@@ -112,8 +112,6 @@ def register_personajes():
         db.session.commit()
         return jsonify({"msg": "Personajes created successfully"}), 200
 
-
-
 @app.route('/planetas', methods=['POST']) 
 def regiter_planetas():
     name = request.json.get("name", None)
@@ -144,7 +142,6 @@ def regiter_planetas():
         db.session.commit()
         return jsonify({"msg": "planetas created successfully"}), 200
 
-
 @app.route('/favoritos', methods=['GET']) 
 def favoritos():
     User_id = request.json.get("User_id", None)
@@ -152,6 +149,45 @@ def favoritos():
     favoritoId = request.json.get("favoritoId", None)
 
     favoritos = Favoritos.query.filter_by(User_id=User_id, tipoFavorito=tipoFavorito,favoritoId=favoritoId).first()
+
+
+
+
+
+#*********************inician los Get
+
+
+@app.route('/planetas/<int:planetas_id>', methods=['PUT', 'GET'])
+def get_single_planetas(planetas_id):
+    """
+    Single planetas
+    """
+    body = request.get_json() #{ 'username': 'new_username'}
+    if request.method == 'PUT':
+        planetas1 = Planetas.query.get(planetas_id)
+        planetas1.name = body.name
+        db.session.commit()
+        return jsonify(planetas1.serialize()), 200
+    if request.method == 'GET':
+        planetas1 = Planetas.query.get(planetas_id)
+        return jsonify(planetas_id.serialize()), 200
+
+    return "Invalid Method", 404
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
