@@ -23,7 +23,6 @@ class User(db.Model):
 
 class Personajes(db.Model):
     __tablename__ = 'personajes'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     gender = db.Column(db.String(250), nullable=False)
@@ -41,7 +40,6 @@ class Personajes(db.Model):
 
 class Planetas(db.Model):
     __tablename__ = 'planetas'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     diameter = db.Column(db.Integer, nullable=False)
@@ -57,12 +55,10 @@ class Planetas(db.Model):
             # do not serialize the password, its a security breach
         }
 
-
 class Favoritos(db.Model):
     __tablename__ = 'favoritos'
-
     id = db.Column(db.Integer, primary_key=True)
-    User_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    #User_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tipoFavorito = db.Column(db.String(250), nullable=False)
     favoritoId = db.Column(db.String(250), nullable=False)
     def serialize(self):

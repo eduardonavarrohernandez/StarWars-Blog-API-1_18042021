@@ -38,6 +38,26 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+#Inician los POST
+
+@app.route('/login', methods=['POST']) 
+def login():
+    mail = request.json.get("mail", None)
+    password = request.json.get("password", None)
+
+    print(mail)
+    print(password)
+
+    user = User.query.filter_by(mail=mail, password=password).first()
+    # valida si estan vacios los ingresos
+    if user is None:
+       return jsonify({"msg": "Bad mail or password"}), 401
+    
+    # crear token login
+    access_token = create_access_token(identity=mail)
+    return jsonify({"token": access_token})
+
 @app.route('/user', methods=['POST'])
 def register_user():
     name = request.json.get("name", None)
@@ -64,23 +84,6 @@ def register_user():
         db.session.add(user1)
         db.session.commit()
         return jsonify({"msg": "User created successfully"}), 200
-
-@app.route('/login', methods=['POST']) 
-def login():
-    mail = request.json.get("mail", None)
-    password = request.json.get("password", None)
-
-    print(mail)
-    print(password)
-
-    user = User.query.filter_by(mail=mail, password=password).first()
-    # valida si estan vacios los ingresos
-    if user is None:
-       return jsonify({"msg": "Bad mail or password"}), 401
-    
-    # crear token login
-    access_token = create_access_token(identity=mail)
-    return jsonify({"token": access_token})
 
 @app.route('/personajes', methods=['POST']) 
 def register_personajes():
@@ -142,16 +145,41 @@ def regiter_planetas():
         db.session.commit()
         return jsonify({"msg": "planetas created successfully"}), 200
 
-@app.route('/favoritos', methods=['GET']) 
-def favoritos():
-    User_id = request.json.get("User_id", None)
-    tipoFavorito = request.json.get("tipoFavorito", None)
-    favoritoId = request.json.get("favoritoId", None)
-
-    favoritos = Favoritos.query.filter_by(User_id=User_id, tipoFavorito=tipoFavorito,favoritoId=favoritoId).first()
-
-
 #Inician los GET
+
+@app.route('/user', methods = ['GET'])
+def users():
+    if request.method == 'GET':
+        records = User.query.all()
+        return jsonify([User.serialize(record) for record in records]) #LLAMAR A TODOS
+    else:
+        return jsonify({"msg": "no autorizado"})
+
+#SOLO MANDA A LLAMAR A UNO SOLO 
+@app.route('/user/<user>/', methods = ['GET'])
+def user(user):
+    if request.method == 'GET':
+        records = User.query.filter_by(id=user)  #FILTRA SOLAMENTE EL ID
+        return jsonify([User.serialize(record) for record in records])
+    else:
+        return jsonify({"msg": "no autorizado"})
+
+@app.route('/personajes', methods = ['GET'])
+def personajes():
+    if request.method == 'GET':
+        records = Personajes.query.all()
+        return jsonify([Personajes.serialize(record) for record in records]) #LLAMAR A TODOS
+    else:
+        return jsonify({"msg": "no autorizado"})
+
+#SOLO MANDA A LLAMAR A UNO SOLO 
+@app.route('/personajes/<personaje>/', methods = ['GET'])
+def personaje(personaje):
+    if request.method == 'GET':
+        records = Personajes.query.filter_by(id=personaje)  #FILTRA SOLAMENTE EL ID
+        return jsonify([Personajes.serialize(record) for record in records])
+    else:
+        return jsonify({"msg": "no autorizado"})
 
 @app.route('/planetas', methods = ['GET'])
 def planetas():
@@ -170,41 +198,16 @@ def planeta(planeta):
     else:
         return jsonify({"msg": "no autorizado"})
 
-@app.route('/personajes', methods = ['GET'])
-def personajes():
-    if request.method == 'GET':
-        records = Personajes.query.all()
-        return jsonify([Personajes.serialize(record) for record in records]) #LLAMAR A TODOS
-    else:
-        return jsonify({"msg": "no autorizado"})
-
-
 #SOLO MANDA A LLAMAR A UNO SOLO 
-@app.route('/personajes/<personaje>/', methods = ['GET'])
-def personaje(personaje):
+@app.route('/favoritos/<favorito>/', methods = ['GET'])
+def favorito(favorito):
     if request.method == 'GET':
-        records = Personajes.query.filter_by(id=personaje)  #FILTRA SOLAMENTE EL ID
-        return jsonify([Personajes.serialize(record) for record in records])
-    else:
-        return jsonify({"msg": "no autorizado"})
-
-@app.route('/user', methods = ['GET'])
-def users():
-    if request.method == 'GET':
-        records = User.query.all()
-        return jsonify([User.serialize(record) for record in records]) #LLAMAR A TODOS
+        records = Favoritos.query.filter_by(id=favorito)  #FILTRA SOLAMENTE EL ID
+        return jsonify([Favoritos.serialize(record) for record in records])
     else:
         return jsonify({"msg": "no autorizado"})
 
 
-#SOLO MANDA A LLAMAR A UNO SOLO 
-@app.route('/user/<user>/', methods = ['GET'])
-def user(user):
-    if request.method == 'GET':
-        records = User.query.filter_by(id=user)  #FILTRA SOLAMENTE EL ID
-        return jsonify([User.serialize(record) for record in records])
-    else:
-        return jsonify({"msg": "no autorizado"})
 
 
 
