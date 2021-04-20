@@ -209,21 +209,11 @@ def favorito(favorito):
 
 #Inician los DELETE***********************************************************************************************************
 
-@app.route("/Favoritos/<favorito>/", methods=["DELETE"])
+@app.route("/favoritos/<favorito>", methods=["DELETE"])
 def favorito_delete(favorito):
-    favorito = Favoritos.query.filter_by(id=favorito)
+    favorito = Favoritos.query.get(favorito)
     db.session.delete(favorito)
     db.session.commit()
-
-    return "Guide was successfully deleted"
-
-
-@app.route("/guide/<id>", methods=["DELETE"])
-def guide_delete(id):
-    guide = Guide.query.get(id)
-    db.session.delete(guide)
-    db.session.commit()
-
     return "Guide was successfully deleted"
 
 
