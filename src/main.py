@@ -39,7 +39,7 @@ def sitemap():
     return generate_sitemap(app)
 
 
-#Inician los POST
+#Inician los POST************************************************************************************************************
 
 @app.route('/login', methods=['POST']) 
 def login():
@@ -206,6 +206,26 @@ def favorito(favorito):
         return jsonify([Favoritos.serialize(record) for record in records])
     else:
         return jsonify({"msg": "no autorizado"})
+
+#Inician los DELETE***********************************************************************************************************
+
+@app.route("/Favoritos/<favorito>/", methods=["DELETE"])
+def favorito_delete(favorito):
+    favorito = Favoritos.query.filter_by(id=favorito)
+    db.session.delete(favorito)
+    db.session.commit()
+
+    return "Guide was successfully deleted"
+
+
+@app.route("/guide/<id>", methods=["DELETE"])
+def guide_delete(id):
+    guide = Guide.query.get(id)
+    db.session.delete(guide)
+    db.session.commit()
+
+    return "Guide was successfully deleted"
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
