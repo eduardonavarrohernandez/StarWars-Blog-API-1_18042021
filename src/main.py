@@ -151,45 +151,25 @@ def favoritos():
     favoritos = Favoritos.query.filter_by(User_id=User_id, tipoFavorito=tipoFavorito,favoritoId=favoritoId).first()
 
 
-
-
-
 #*********************inician los Get
-
-'''
-@app.route('/planetas/<int:planetas_id>', methods=['PUT', 'GET'])
-def get_single_planetas(planetas_id):
-    """
-    Single planetas
-    """
-    body = request.get_json() #{ 'username': 'new_username'}
-    if request.method == 'PUT':
-        planetas1 = Planetas.query.get(planetas_id)
-        planetas1.name = body.name
-        db.session.commit()
-        return jsonify(planetas1.serialize()), 200
-    if request.method == 'GET':
-        planetas1 = Planetas.query.get(planetas_id)
-        return jsonify(planetas_id.serialize()), 200
-
-    return "Invalid Method", 404
-'''
-
-
 
 @app.route('/planetas', methods = ['GET'])
 def planetas():
-   if request.method == 'GET':
-      return jsonify({"msg": "exists"})
-   else:
-      return jsonify({"msg": "not exists"})
+    if request.method == 'GET':
+        records = Planetas.query.all()
+        return jsonify([Planetas.serialize(record) for record in records]) #LLAMAR A TODOS
+    else:
+        return jsonify({"msg": "no autorizado"})
 
 
-
-
-
-
-
+#SOLO MANDA A LLAMAR A UNO SOLO 
+@app.route('/planetas/<planeta>/', methods = ['GET'])
+def planeta(planeta):
+    if request.method == 'GET':
+        records = Planetas.query.filter_by(id=planeta)  #FILTRA SOLAMENTE EL ID
+        return jsonify([Planetas.serialize(record) for record in records])
+    else:
+        return jsonify({"msg": "no autorizado"})
 
 
 
