@@ -58,7 +58,7 @@ class Planetas(db.Model):
 class Favoritos(db.Model):
     __tablename__ = 'favoritos'
     id = db.Column(db.Integer, primary_key=True)
-    #User_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    User_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tipoFavorito = db.Column(db.String(250), nullable=False)
     favoritoId = db.Column(db.String(250), nullable=False)
     def serialize(self):

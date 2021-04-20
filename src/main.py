@@ -145,7 +145,7 @@ def regiter_planetas():
         db.session.commit()
         return jsonify({"msg": "planetas created successfully"}), 200
 
-#Inician los GET
+#Inician los GET***********************************************************************************************************
 
 @app.route('/user', methods = ['GET'])
 def users():
