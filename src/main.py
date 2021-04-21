@@ -214,7 +214,7 @@ def favorito_delete(favorito):
     favorito = Favoritos.query.get(favorito)
     db.session.delete(favorito)
     db.session.commit()
-    return "Guide was successfully deleted"
+    return "Favoritos was successfully deleted"
 
 
 # this only runs if `$ python src/main.py` is executed
